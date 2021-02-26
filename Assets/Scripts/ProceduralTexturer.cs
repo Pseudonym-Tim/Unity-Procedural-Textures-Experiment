@@ -2,10 +2,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-// TODO: Idea/extra, make it parse texture pixel info from a string box so you can make textures in the editor during runtime
-// TODO: Just make a custom cull off transparent cutout shader...
-// NOTE: When regenerating during runtime it's better to just do SetPixels lol
-/// IDEA: use GL or something to set resolution to 212x120 pixels
+// TODO: Idea/extra, make it parse texture pixel info from a string exposed to the inspector so you can make textures in the editor during runtime
+// NOTE: SetPixels is better for runtime texture generation...
 
     ////////////////////////////////////////////////////////////////////////////////////
    //                       Written By Pseudonym_Tim 2020                            //
@@ -19,13 +17,8 @@ public class ProceduralTexturer : MonoBehaviour
 {
     public static readonly int TEXTURE_SIZE = 16;
 
-    public static readonly int textureAtlasSizeInBlocks = 2; // (We can just make it according to our block types count I think)
+    public static readonly int textureAtlasSizeInBlocks = 2;
     public static float normalizedBlockTextureSize { get { return 1f / (float)textureAtlasSizeInBlocks; } }
-
-    private void Update()
-    {
-
-    }
 
     public Texture2D CreateBlockTextureAtlas()
     {
@@ -53,22 +46,23 @@ public class ProceduralTexturer : MonoBehaviour
     {
         switch(blockIndex)
         {
-            case 0:
-                // (Air, transparent)
+            case (int)BlockTypes.AIR:
                 MakeAirTexture(blockTexture);
                 break;
-            case 1:
+            case (int)BlockTypes.BRICK:
                 MakeBrickTexture(blockTexture);
                 break;
-            case 2:
+            case (int)BlockTypes.DIRT:
                 MakeDirtTexture(blockTexture);
                 break;
-            case 3:
+            case (int)BlockTypes.LEAVES:
                 MakeLeavesTexture(blockTexture);
                 break;
         }
 
-        if(blockIndex != 0) { PaintNoise(blockTexture); } // Noise pass on the new texture...
+        // Do a noise pass on the new texture if it's not air...
+        if(blockIndex != (int)BlockTypes.AIR) { PaintNoise(blockTexture); } 
+
         blockTexture.Apply();
     }
 
@@ -159,7 +153,7 @@ public class ProceduralTexturer : MonoBehaviour
         }
     }
 
-    // TODO: Actual perlin noise or something lol
+    // TODO: Actual perlin noise 
     /// <summary>
     /// Darken random pixels for some noise to fake some detail...
     /// </summary>

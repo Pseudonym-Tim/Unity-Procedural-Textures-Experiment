@@ -3,9 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 // TODO: Perlin noise!
-// TODO: Seperate chunk meshes...
-// TODO: Chunk generation does NOT like generating using coroutines
-// TODO: Setting the blockMap to air will fuck things up for some reason
+// TODO: Chunking system instead of just one chunk, 16x16 is vert limit basically...
 
     ////////////////////////////////////////////////////////////////////////////////////
    //                       Written By Pseudonym_Tim 2020                            //
@@ -13,7 +11,7 @@ using UnityEngine;
  ////////////////////////////////////////////////////////////////////////////////////
 
 /// <summary>
-/// Generates a procedurally generated perlin noise chunk
+/// Generates a procedurally generated chunk
 /// of runtime created block meshes using textures created entirely through code
 /// </summary>
 public class ChunkGeneration : MonoBehaviour
@@ -131,22 +129,6 @@ public class ChunkGeneration : MonoBehaviour
         }
     }
 
-    /*private void AddChunkMeshInfo()
-    {
-        for(int x = 0; x < chunkWidth; x++)
-        {
-            for(int z = 0; z < chunkWidth; z++)
-            {
-                for(int y = 0; y < chunkHeight; y++)
-                {
-                    AddBlockMeshData(new Vector3Int(x, y, z));
-                }
-
-                blockCount++;
-            }
-        }
-    }*/
-
     private void DebugText()
     {
         string debugString = null;
@@ -191,9 +173,6 @@ public class ChunkGeneration : MonoBehaviour
                 {
                     // Set to a random block...
                     blockMap[x, y, z] = (byte)Random.Range(0, System.Enum.GetNames(typeof(BlockTypes)).Length);
-
-                    // Randomly set to air instead
-                    //if(Random.value <= createAirChance) { blockMap[x, y, z] = (byte)BlockTypes.AIR; }
                 }
             }
         }
@@ -220,8 +199,8 @@ public class ChunkGeneration : MonoBehaviour
     {
         switch(blockID)
         {
-            case 0: return true; // Air
-            case 3: return true; // Leaves
+            case (byte)BlockTypes.AIR: return true;
+            case (byte)BlockTypes.LEAVES: return true; 
         }
 
         return false;
