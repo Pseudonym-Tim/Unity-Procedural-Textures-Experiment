@@ -123,7 +123,7 @@ public class ChunkGeneration : MonoBehaviour
                 {
                     AddBlockMeshData(new Vector3Int(x, y, z));
                     MakeChunkMesh(); // Make our mesh...
-                    yield return new WaitForSeconds(createBlockWaitTime);
+                    yield return new WaitForSecondsRealtime(createBlockWaitTime);
                 }
 
                 blockCount++;
